@@ -3,15 +3,17 @@ package org.example;
 import org.example.domain.User;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class SaveUser {
 
     private static final File amount = new File("src\\main\\java\\org\\example\\users\\amount.txt");
+
+    // recebe um usuario e o serializa no formato 1-NOME.ser
     public static void save(User user){
-        // criar um novo arquivo com o nome do user
-
-        // salvar as informações dele: duas formas: linha linha ou serializacao
-
         int am = getAmount();
         am++;
         String nameFile = user.getName().replace(" ", "").toUpperCase();
@@ -30,6 +32,8 @@ public class SaveUser {
         setAmount(am);
     }
 
+    // recebe uma posicao e retorna o usuario correspondente
+    // 1 - User1; 2 - User2; 3 - User3
     public static User getUser(int pos){
         File file = new File("src\\main\\java\\org\\example\\users\\");
         File[] arq = file.listFiles();
@@ -46,12 +50,33 @@ public class SaveUser {
         }
     }
 
+    // retorna todos os usuarios
+    public static List<User> getAllUsers(){
+        int am = getAmount();
+        List<User> users = new ArrayList<>();
+
+        for (int i = 1; i <= am; i++) {
+            users.add(getUser(i));
+        }
+        return users;
+    }
+
+    // usando IntStream
+    public static List<User> getAllUsers2(){
+        int am = getAmount() + 1;
+        List<User> users = new ArrayList<>();
+
+        return IntStream.range(1, am)
+                .mapToObj(SaveUser::getUser)
+                .collect(Collectors.toList());
+    }
+
+    // retorna a quantidade de users salvos
     private static int getAmount(){
         try (FileReader fr = new FileReader(amount);
              BufferedReader br = new BufferedReader(fr))
         {
             String line = br.readLine();
-
             return Integer.parseInt(line);
         }
         catch (Exception e){
@@ -60,6 +85,7 @@ public class SaveUser {
         return 0;
     }
 
+    // altera a quantidade de users salvos
     private static void setAmount(int am){
         try(FileWriter fw = new FileWriter(amount);
             BufferedWriter bw = new BufferedWriter(fw))
