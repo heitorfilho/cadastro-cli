@@ -5,7 +5,9 @@ import org.example.domain.User;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Main {
@@ -24,21 +26,23 @@ public class Main {
             e.printStackTrace();
         }
 
-        //User user = new User("Carlos Magna", "carlos@gmail.com", 20, 176.5F);
+        //printMenu();
+        //SaveUser.register();
 
-        //SaveUser.save(user);
-        //User carlos = SaveUser.getUser(1);
-        //System.out.println(carlos);
+        List<User> users = SaveUser.getAllUsers2();
 
-        List<User> users = SaveUser.getAllUsers();
+        //opt 1
+        for(User user : users) {
+            System.out.println((users.indexOf(user) + 1) + " - " + user.getName());
+        }
 
-        users.forEach(u -> System.out.println(u.getName()));
+        //opt 2
+        IntStream.range(0, users.size())
+                .forEach(pos -> {
+                    User user = users.get(pos);
+                    System.out.println((pos+1) + " - " + user.getName());
+                });
 
-        users.forEach(System.out::println);
-
-        // criar menu
-
-        printMenu();
     }
 
     private static void printMenu(){

@@ -5,6 +5,7 @@ import org.example.domain.User;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -30,6 +31,40 @@ public class SaveUser {
             e.printStackTrace();
         }
         setAmount(am);
+    }
+
+    // cadastra um usuario e ja serializa
+    public static void register(){
+        Scanner sc = new Scanner(System.in);
+
+        String name;
+        String email;
+        int age;
+        float height;
+
+        System.out.print("\nQual seu nome completo? ");
+        name = sc.nextLine();
+
+        System.out.print("Qual seu email de contato?  ");
+        email = sc.nextLine();
+
+        System.out.print("Qual sua idade? ");
+        age = sc.nextInt();
+
+        System.out.print("Qual sua altura? ");
+        height = sc.nextFloat();
+
+        User user = new User(name, email, age, height);
+
+        if (user != null){
+            System.out.println("Usuario cadastrado com sucesso");
+            SaveUser.save(user);
+        }
+        else{
+            System.out.println("Erro no cadastro");
+        }
+
+        sc.close();
     }
 
     // recebe uma posicao e retorna o usuario correspondente
