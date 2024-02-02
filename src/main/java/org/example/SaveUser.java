@@ -25,7 +25,6 @@ public class SaveUser {
         try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(pathName)))
         {
             outputStream.writeObject(user);
-            System.out.println("Objeto serializado com sucesso.");
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -56,7 +55,7 @@ public class SaveUser {
 
         User user = new User(name, email, age, height);
 
-        if (user != null){
+        if(user != null){
             System.out.println("Usuario cadastrado com sucesso");
             SaveUser.save(user);
         }
@@ -77,7 +76,6 @@ public class SaveUser {
         User user;
         try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(arq[posFile]))) {
             user = (User) inputStream.readObject();
-            System.out.println("Objeto deserializado com sucesso.");
             return user;
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -85,8 +83,18 @@ public class SaveUser {
         }
     }
 
-    // retorna todos os usuarios
+    // usando IntStream
     public static List<User> getAllUsers(){
+        int am = getAmount() + 1;
+        List<User> users = new ArrayList<>();
+
+        return IntStream.range(1, am)
+                .mapToObj(SaveUser::getUser)
+                .collect(Collectors.toList());
+    }
+
+    // retorna todos os usuarios
+    public static List<User> getAllUsers2(){
         int am = getAmount();
         List<User> users = new ArrayList<>();
 
@@ -94,16 +102,6 @@ public class SaveUser {
             users.add(getUser(i));
         }
         return users;
-    }
-
-    // usando IntStream
-    public static List<User> getAllUsers2(){
-        int am = getAmount() + 1;
-        List<User> users = new ArrayList<>();
-
-        return IntStream.range(1, am)
-                .mapToObj(SaveUser::getUser)
-                .collect(Collectors.toList());
     }
 
     // retorna a quantidade de users salvos

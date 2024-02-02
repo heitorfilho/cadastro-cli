@@ -1,4 +1,4 @@
-Qual seu nome completo?
-Qual seu email de contato?
-Qual sua idade?
-Qual sua altura?
+1 - Cadastrar o usuário
+2 - Listar todos usuários cadastrados
+3 - Pesquisar usuário por nome ou idade ou email
+
