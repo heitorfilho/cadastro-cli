@@ -1,27 +1,27 @@
 package org.example;
 
 import org.example.domain.User;
+import org.example.exceptions.InvalidUserException;
+import org.example.service.UserService;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class Main {
+
+    private static Scanner sc;
     public static void main(String[] args) {
 
-        Scanner sc = new Scanner(System.in);
+        sc = new Scanner(System.in);
+
         int opt = 0;
         String ft = "";
 
         while (opt != 4){
             printMenu();
             opt = sc.nextInt();
+            sc.nextLine();
 
             switch (opt) {
                 case 1 -> {
@@ -31,14 +31,12 @@ public class Main {
                     listUsers();
                 }
                 case 3 -> {
-                    sc.nextLine();
-                    System.out.println("Digite o nome que deseja buscar: ");
-                    ft = sc.nextLine();
-                    filterUser(ft);
+                    filterUser();
                 }
             }
         }
 
+        sc.close();
     }
 
     private static void printMenu(){
@@ -48,17 +46,23 @@ public class Main {
                 + "1 - Cadastrar o usuário" + "\n"
                 + "2 - Listar todos usuários cadastrados" + "\n"
                 + "3 - Pesquisar usuário por nome ou idade ou email" + "\n"
-                + "4 - Sair" + "\n"
+                + "4 - Sair"
                 //+ "--------------------------" + "\n"
         );
     }
 
     private static void registerUser(){
-        SaveUser.register();
+        try {
+            UserService.register();
+            System.out.println("Usuário cadastrado com sucesso!");
+        } catch(InvalidUserException e){
+            System.out.println("Erro no cadastro: " + e.getMessage());
+        }
     }
 
+
     private static void listUsers(){
-        List<User> users = SaveUser.getAllUsers();
+        List<User> users = UserService.getAllUsers();
 
         IntStream.range(0, users.size())
                 .forEach(pos -> {
@@ -67,8 +71,12 @@ public class Main {
                 });
     }
 
-    private static void filterUser(String searchTerm) {
-        List<User> users = SaveUser.getAllUsers();
+    private static void filterUser() {
+
+        System.out.println("Digite o nome que deseja buscar: ");
+        String searchTerm = sc.nextLine();
+
+        List<User> users = UserService.getAllUsers();
 
         List<User> filteredUsers = users.stream()
                 .filter(user -> user.getName().toLowerCase().contains(searchTerm.toLowerCase()))

@@ -1,6 +1,7 @@
-package org.example;
+package org.example.service;
 
 import org.example.domain.User;
+import org.example.exceptions.InvalidUserException;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class SaveUser {
+public class UserService {
 
     private static final File amount = new File("src\\main\\java\\org\\example\\users\\amount.txt");
 
@@ -33,7 +34,7 @@ public class SaveUser {
     }
 
     // cadastra um usuario e ja serializa
-    public static void register(){
+    public static void register() throws InvalidUserException {
         Scanner sc = new Scanner(System.in);
 
         String name;
@@ -43,25 +44,27 @@ public class SaveUser {
 
         System.out.print("\nQual seu nome completo? ");
         name = sc.nextLine();
+        if (name.length() < 10){
+            throw new InvalidUserException("O nome do usuário deve ter pelo menos 10 caracteres.");
+        }
 
         System.out.print("Qual seu email de contato?  ");
         email = sc.nextLine();
+        if (!email.contains("@")) {
+            throw new InvalidUserException("O email do usuário deve conter o caractere '@'.");
+        }
 
         System.out.print("Qual sua idade? ");
         age = sc.nextInt();
+        if (age<18) {
+            throw new InvalidUserException("O usuario deve ter pelo menos 18 anos.");
+        }
 
         System.out.print("Qual sua altura? ");
         height = sc.nextFloat();
 
         User user = new User(name, email, age, height);
-
-        if(user != null){
-            System.out.println("Usuario cadastrado com sucesso");
-            SaveUser.save(user);
-        }
-        else{
-            System.out.println("Erro no cadastro");
-        }
+        UserService.save(user);
 
         sc.close();
     }
@@ -89,7 +92,7 @@ public class SaveUser {
         List<User> users = new ArrayList<>();
 
         return IntStream.range(1, am)
-                .mapToObj(SaveUser::getUser)
+                .mapToObj(UserService::getUser)
                 .collect(Collectors.toList());
     }
 
