@@ -35,7 +35,7 @@ public class UserService {
 
     // cadastra um usuario e ja serializa
     public static void register() throws InvalidUserException {
-        Scanner sc = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
 
         String name;
         String email;
@@ -43,30 +43,38 @@ public class UserService {
         float height;
 
         System.out.print("\nQual seu nome completo? ");
-        name = sc.nextLine();
+        name = scanner.nextLine();
         if (name.length() < 10){
             throw new InvalidUserException("O nome do usuário deve ter pelo menos 10 caracteres.");
         }
 
         System.out.print("Qual seu email de contato?  ");
-        email = sc.nextLine();
+        email = scanner.nextLine();
         if (!email.contains("@")) {
             throw new InvalidUserException("O email do usuário deve conter o caractere '@'.");
         }
 
         System.out.print("Qual sua idade? ");
-        age = sc.nextInt();
+        age = scanner.nextInt();
         if (age<18) {
             throw new InvalidUserException("O usuario deve ter pelo menos 18 anos.");
         }
 
         System.out.print("Qual sua altura? ");
-        height = sc.nextFloat();
+        height = scanner.nextFloat();
+
+        List<User> users = getAllUsers();
+
+        for (User u: users) {
+            if (u.getEmail().equals(email)){
+                throw new InvalidUserException("Esse email já existe.");
+            }
+        }
 
         User user = new User(name, email, age, height);
         UserService.save(user);
 
-        sc.close();
+        //scanner.close();
     }
 
     // recebe uma posicao e retorna o usuario correspondente

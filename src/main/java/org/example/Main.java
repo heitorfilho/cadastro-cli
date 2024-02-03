@@ -4,16 +4,16 @@ import org.example.domain.User;
 import org.example.exceptions.InvalidUserException;
 import org.example.service.UserService;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.IntStream;
 
 public class Main {
 
-    private static Scanner sc;
     public static void main(String[] args) {
 
-        sc = new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
 
         int opt = 0;
         String ft = "";
@@ -74,6 +74,7 @@ public class Main {
     private static void filterUser() {
 
         System.out.println("Digite o nome que deseja buscar: ");
+        Scanner sc = new Scanner(System.in);
         String searchTerm = sc.nextLine();
 
         List<User> users = UserService.getAllUsers();
